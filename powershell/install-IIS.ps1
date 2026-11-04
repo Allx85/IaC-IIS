@@ -4,7 +4,7 @@
 
 # Parametrar
 param (
-    [string]$SourceFile = "C:\IaC-IIS\wwwroot\index.html",
+    [string]$SourceFile = "C:\IT-infrastruktur25\iac kursen\projekt-IIS\IaC-IIS\wwwroot\index.html",
     [string]$DestinationPath = "C:\inetpub\wwwroot",
     [string]$Url = "http://localhost"
 )
@@ -18,36 +18,52 @@ function Install-IIS {
     )
 
     Write-host "`nChecking if IIS is installed..." -ForegroundColor Cyan
+# kontrollera om det är Windows 10/11 = type 1 eller windows server = type 3 DC = type 2
+    $isWindowsServer = (Get-CimInstance -ClassName Win32_OperatingSystem -ErrorAction Stop).ProductType -ne 1
 
     foreach ($feature in $Features) {
         try {
-            
-            #Kontroll om funktionen är akativerad
-            $status = Get-WindowsOptionalFeature `
-                -Online `
-                -FeatureName $feature `
-                -ErrorAction Stop
-            if ($status.state -ne "Enabled") {
+            if ($isWindowsServer) {
+                $serverFeature = switch ($feature) {
+                    "IIS-WebServerRole" { "Web-Server" }
+                    "IIS-ManagementConsole" { "Web-Mgmt-Console" }
+                    default { throw "No Windows Server feature mapping exists for '$feature'." }
+                }
 
-                Write-host "Installing $feature..." -ForegroundColor Yellow
-
-                #Aktivera funktionen
-                $result = Enable-WindowsOptionalFeature `
-                    -Online `
-                    -FeatureName $feature `
-                    -All `
-                    -NoRestart `
-                    -ErrorAction Stop
-                if ($result.RestartNeeded) {
-                    write-warning "Restart windows"
+                $status = Get-WindowsFeature -Name $serverFeature -ErrorAction Stop
+                if (-not $status.Installed) {
+                    Write-host "Installing $serverFeature..." -ForegroundColor Yellow
+                    $result = Install-WindowsFeature -Name $serverFeature -ErrorAction Stop
+                    if (-not $result.Success) {
+                        throw "Windows Server could not install feature '$serverFeature'."
+                    }
+                    if ($result.RestartNeeded -eq "Yes") {
+                        Write-warning "Restart Windows to complete the installation."
+                    }
+                }
+                else {
+                    Write-host "$serverFeature already activated" -ForegroundColor Green
                 }
             }
-            
             else {
-                Write-host "$feature allready activated" -ForegroundColor Green
+                # Use native DISM because its PowerShell cmdlets can fail with COM
+                # registration errors on some Windows client installations.
+                $dismPath = Join-Path $env:windir "System32\dism.exe"
+                if ([Environment]::Is64BitOperatingSystem -and -not [Environment]::Is64BitProcess) {
+                    $dismPath = Join-Path $env:windir "Sysnative\dism.exe"
+                }
+
+                Write-host "Enabling $feature..." -ForegroundColor Yellow
+                & $dismPath /Online /Enable-Feature "/FeatureName:$feature" /All /NoRestart
+                $dismExitCode = $LASTEXITCODE
+                if ($dismExitCode -eq 3010) {
+                    Write-warning "Restart Windows to complete the installation."
+                }
+                elseif ($dismExitCode -ne 0) {
+                    throw "DISM failed to enable '$feature' (exit code $dismExitCode)."
+                }
             }
         }
-        
         catch {
             throw "Could not install IIS-feature '$feature': $_"
         }
@@ -78,7 +94,7 @@ function Configure-IIS {
     if (!(Test-Path -Path $Destination -Pathtype Container)) {
 
         # skapa katalog om den inte finns
-        Net-Item -Itemtype Directory -Path $Destination -Force -ErrorAction Stop
+        New-Item -ItemType Directory -Path $Destination -Force -ErrorAction Stop
 
     }
 
@@ -92,3 +108,83 @@ function Configure-IIS {
         Write-Host "Website configured successfully" -ForegroundColor Green
 }
 
+#==========================================
+# Verify IIS installation
+#=========================================
+
+function Test-IIS {
+
+    param(
+        [string]$WebsiteUrl
+    )
+
+    Write-host "`nVerifying IIS..." -ForegroundColor Cyan
+
+    # Hämta IIS tjänsten
+    $Service = Get-Service -Name "W3SVC" -ErrorAction Stop
+
+    # Kontroll om tjänsten körs
+    if ($Service.status -ne "Running") {
+        Write-host "Starting IIS-servce..." -ForegroundColor Yellow
+        Start-Service -Name "W3SVC" -ErrorAction Stop
+
+    }
+    else {
+        Write-host "IIS-service is running" -ForegroundColor Green
+    }
+
+    # Kontrollera att webbplatsen är tillgänglig
+    $response = Invoke-WebRequest `
+        -Uri $WebsiteUrl `
+        -UseBasicParsing `
+        -ErrorAction Stop
+    if ($response.statuscode -eq 200) {
+
+        Write-Host "Website is available" -ForegroundColor Green
+        Write-Host "HTTP-status code: $($response.statuscode)" -ForegroundColor Green
+
+    }
+    else {
+        throw "Website is not available. HTTP-status code: $($response.statuscode)"
+    }
+}
+
+#==========================================
+# Huvud skript
+#==========================================
+
+try {
+
+    Write-Host "================================" -ForegroundColor Cyan
+    Write-Host "Starting IIS installation and configuration..."
+    Write-Host "================================" -ForegroundColor Cyan
+
+    # Array med IIS-funktioner som ska aktiveras
+    $iisFeatures = @(
+        "IIS-WebServerRole",
+        "IIS-ManagementConsole"
+    )
+
+    # Steg 1: installera IIS
+    Install-IIS -Features $iisFeatures
+
+    # Steg 2: Konfigurera Webbplatsen
+    Configure-IIS `
+        -source $SourceFile `
+        -destination $DestinationPath
+    
+    # Steg 3: Verifiera webbserver
+    Test-IIS -WebsiteUrl $Url
+
+    Write-Host "================================" -ForegroundColor Cyan
+    Write-Host "Installation is completed successfully!"
+    Write-Host "================================" -ForegroundColor Cyan
+
+
+
+
+}
+catch {
+    Write-host "`nAn error occurred during the installation and configuration of IIS:" -ForegroundColor Red
+    Write-Host $_ -ForegroundColor Red
+}

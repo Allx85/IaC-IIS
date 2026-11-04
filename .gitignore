@@ -1,3 +1,10 @@
 .env
 .env*
-.tfstate
+
+# Terraform-generated files
+**/.terraform/
+*.tfstate
+*.tfstate.*
+
+# Avoid tracking a Windows drive path created relative to terraform/
+terraform/C*/
