@@ -1,9 +1,5 @@
-output "website_path" {
-    description = "Sökväg till Webbplatsens startsida"
+output "website_location" {
+    description = "Location of the generated website"
     value = local_file.website.filename
-}
-
-output "setup_path" {
-    description = "Sökväg till setup-filen"
-    value = local_file.setup.filename
+    
 }

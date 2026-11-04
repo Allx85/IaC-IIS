@@ -4,7 +4,7 @@
 
 # Ladda in funktionerna
 . "$PSScriptRoot\functions\Install-IIS.ps1"
-. "$PSScriptRoot\functions\Configure-IIS.ps1"
+. "$PSScriptRoot\functions\Set-IISwebsite.ps1"
 . "$PSScriptRoot\functions\Test-IIS.ps1"
 
 
