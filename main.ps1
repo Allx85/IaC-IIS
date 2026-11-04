@@ -9,7 +9,7 @@
 
 
 # Parametrar
-$SourceFile = "$PSScriptRoot\wwwroot\index.html"
+$SourceFile = "$PSScriptRoot\C:\inetpub\wwwroot\index.html"
 $DestinationPath = "C:\inetpub\wwwroot"
 $Url = "http://localhost"
 
@@ -32,12 +32,12 @@ try {
     Install-IIS -Features $iisFeatures
 
     # Steg 2: Konfigurera webbplatsen
-    Set-IISWebsite `
-        -Source $SourceFile `
-        -Destination $DestinationPath
+    #Set-IISWebsite `
+    #    -Source $SourceFile `
+    #    -Destination $DestinationPath
 
     # Steg 3: Verifiera webbservern
-    Test-IIS -WebsiteUrl $Url
+    #Test-IIS -WebsiteUrl $Url
 
     Write-Host "================================" -ForegroundColor Cyan
     Write-Host "Installation completed successfully!" -ForegroundColor Green

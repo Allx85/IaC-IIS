@@ -1,1 +1,0 @@
-Terraform har skapat projektstrukturen.

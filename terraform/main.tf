@@ -9,9 +9,9 @@ terraform {
 
 provider "local" {}
 
-# skapar webbplats från HMTL-mall
+# skapar webbplats från HMTL-mall, flyttar till "C:\inetpub\wwwroot"
 resource "local_file" "website" {
-  filename = abspath("${path.module}/../wwwroot/${var.website_filename}")
+  filename = abspath("C:/inetpub/wwwroot/${var.website_filename}")
   content  = file("${path.module}/../templates/${var.website_filename}")
 }
 # skapar loggfil som bekräftar att projektstrukturen har skapats
@@ -20,3 +20,22 @@ resource "local_file" "setup" {
   content  = "Terraform har skapat projektstrukturen."
 
 }
+
+resource "null_resource" "start-service" {
+  provisioner "local-exec" {
+    interpreter = [ "Powershell", "-Command" ]
+    command = "start-service -name W3SVC"
+  
+  }
+  depends_on = [ local_file.setup ]
+}
+
+resource "null_resource" "stop-service" {
+  provisioner "local-exec" {
+    when = destroy
+    interpreter = [ "Powershell", "-Command" ]
+    command = "stop-service -name W3SVC"
+    
+  }
+}
+
