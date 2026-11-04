@@ -9,23 +9,14 @@ terraform {
 
 provider "local" {}
 
+# skapar webbplats från HMTL-mall
 resource "local_file" "website" {
-  filename = abspath("${path.module}/../wwwroot/index.html")
-  content  = <<-EOT
-    
-        <html>
-            <head>
-                <title>Välkommen till min hemsida</title>
-            </head>
-            <body>
-                <h1> Min webbserver fungerar! </h1>
-            </body>
-        </html>
-        EOT
+  filename = abspath("${path.module}/../wwwroot/${var.website_filename}")
+  content  = file("${path.module}/../templates/${var.website_filename}")
 }
-
+# skapar loggfil som bekräftar att projektstrukturen har skapats
 resource "local_file" "setup" {
-  filename = abspath("${path.module}/../logs/setup.txt")
+  filename = abspath("${path.module}/../logs/${var.log_filename}")
   content  = "Terraform har skapat projektstrukturen."
 
 }
