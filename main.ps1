@@ -20,6 +20,23 @@ $iisFeatures = @(
     "IIS-ManagementConsole"
 )
 
+$choice = ""
+
+Write-Host "skriv ett tal mellan 1 och 5" -ForegroundColor DarkMagenta
+$choice = Read-Host 
+Write-Host "=============================" -ForegroundColor DarkMagenta
+Write-Host "=============================" -ForegroundColor DarkMagenta
+Write-Host "Du valde $choice" -ForegroundColor Green
+
+
+
+
+
+
+
+
+
+
 
 # Huvudskript
 try {

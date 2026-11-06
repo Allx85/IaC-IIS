@@ -1,10 +1,11 @@
+#ignorerar lagrade miljövariabler, API keys, username, passwords
 .env
 .env*
 
-# Terraform-generated files
+# ignorerar mappar som heter .terraform.
 **/.terraform/
+# tfstate ignoreras, terraform.tfstate.backup täcks av *.tfstate.*
+#tfstate innehåller känslig information, ID, skapade resurser och status.
 *.tfstate
 *.tfstate.*
 
-# Avoid tracking a Windows drive path created relative to terraform/
-terraform/C*/
