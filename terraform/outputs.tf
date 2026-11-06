@@ -1,5 +1,5 @@
-output "website_location" {
-    description = "Location of the generated website"
-    value = local_file.website.filename
+output "website_url" {
+    description = "URL to website"
+    value = "http://localhost"
     
 }

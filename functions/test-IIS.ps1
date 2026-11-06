@@ -12,9 +12,7 @@ function Test-IIS {
     # Kontrollera om tjänsten körs
     if ($service.Status -ne "Running") {
 
-        Write-Host "Starting IIS service..." -ForegroundColor Yellow
-
-        Start-Service -Name "W3SVC" -ErrorAction Stop
+        Write-Host "IIS service is not running" -ForegroundColor Yellow
 
     }
 
