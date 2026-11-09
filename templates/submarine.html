@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DEEP BLUE</title>
+  <style>
+    body {
+      margin: 0;
+      background: #061925;
+      color: #e9f7fb;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      padding: 25px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      letter-spacing: 4px;
+      font-weight: bold;
+    }
+
+    nav a {
+      color: #64e5dc;
+      margin-left: 25px;
+      text-decoration: none;
+    }
+
+    .hero {
+      min-height: 75vh;
+      padding: 40px 8%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 30px;
+    }
+
+    h1 {
+      font-size: clamp(48px, 7vw, 82px);
+      line-height: 1;
+    }
+
+    h1 span {
+      color: #64e5dc;
+    }
+
+    p {
+      color: #a4c1cb;
+      line-height: 1.8;
+    }
+
+    button {
+      background: #64e5dc;
+      border: none;
+      padding: 15px 25px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .scene {
+      display: grid;
+      place-items: center;
+      min-height: 400px;
+    }
+
+    .submarine {
+      width: 100%;
+      max-width: 550px;
+      animation: float 5s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) rotate(-3deg);
+      }
+      50% {
+        transform: translateY(-20px) rotate(2deg);
+      }
+    }
+
+    @media(max-width: 700px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="brand">DEEP BLUE</div>
+    <nav>
+      <a href="#mission">Mission</a>
+      <a href="#vessel">Farkosten</a>
+    </nav>
+  </header>
+
+  <main class="hero" id="mission">
+
+    <section>
+      <p>EN VÄRLD UNDER YTAN</p>
+
+      <h1>
+        Beyond the<br>
+        <span>surface.</span>
+      </h1>
+
+      <p>
+        Följ med ner i det okända.
+        Utforska havets dolda värld
+        där varje dykning är ett nytt äventyr.
+      </p>
+
+      <button id="diveBtn">
+        STARTA DYKET ↗
+      </button>
+    </section>
+
+    <section class="scene" id="vessel">
+      <svg class="submarine"
+           viewBox="0 0 760 360"
+           xmlns="http://www.w3.org/2000/svg">
+
+        <defs>
+          <linearGradient id="hull" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ffe28a"/>
+            <stop offset="50%" stop-color="#e9a936"/>
+            <stop offset="100%" stop-color="#a95c20"/>
+          </linearGradient>
+
+          <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#a8ffff"/>
+            <stop offset="100%" stop-color="#092d46"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Ubåtens torn -->
+        <path d="M280 130 L300 60 L420 60 L445 130Z"
+              fill="#d59a3c" stroke="#8c531e" stroke-width="5"/>
+
+        <!-- Ubåtens kropp -->
+        <path d="M100 180
+                 Q112 103 245 99
+                 L540 99
+                 Q652 102 690 180
+                 Q653 258 540 261
+                 L245 261
+                 Q112 257 100 180Z"
+              fill="url(#hull)"
+              stroke="#8c541f"
+              stroke-width="7"/>
+
+        <!-- Fönster -->
+        <g fill="url(#glass)" stroke="#88521f" stroke-width="5">
+          <circle cx="250" cy="170" r="28"/>
+          <circle cx="337" cy="170" r="28"/>
+          <circle cx="424" cy="170" r="28"/>
+          <circle cx="511" cy="170" r="28"/>
+        </g>
+
+        <!-- Bakre fena -->
+        <path d="M674 148 L720 130 L720 230 L674 212Z"
+              fill="#d59a3c" stroke="#8c531e" stroke-width="5"/>
+
+        <!-- Propeller -->
+        <path d="M720 180 L748 153 L748 207Z"
+              fill="#9b5b24"/>
+
+      </svg>
+    </section>
+
+  </main>
+
+  <script>
+    const diveButton = document.getElementById("diveBtn");
+
+    diveButton.addEventListener("click", function() {
+      diveButton.textContent = "DYKET PÅGÅR ✓";
+      alert("Välkommen ombord! Dyket börjar!");
+    });
+  </script>
+
+</body>
+</html>

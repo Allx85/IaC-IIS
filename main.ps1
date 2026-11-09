@@ -7,11 +7,10 @@
 . "$PSScriptRoot\functions\Install-IIS.ps1"
 . "$PSScriptRoot\functions\Set-IISwebsite.ps1"
 . "$PSScriptRoot\functions\Test-IIS.ps1"
-. "$PSScirptRoot\functions\menu.ps1"
+. "$PSScriptRoot\functions\menu.ps1"
 
 
 # Variabler till skriptet
-$DestinationPath = "C:\inetpub\wwwroot"
 $Url = "http://localhost"
 $Logfile ="C:\IT-infrastruktur25\iac kursen\projekt-IIS\IaC-IIS\logs"
 $Terraformpath = "$PSScriptRoot\terraform"
@@ -51,9 +50,30 @@ while ($running) {
             }
                 #terraform apply kopierar index.html och startar W3SVC tjänsten
             "2" {
-                Write-Host "Deploying site - terraform apply" -ForegroundColor Cyan
+                Write-Host "Deploying site" -ForegroundColor Cyan
                 #push-location =sparar nuvarande katalog, byter till katalgon som anges i $Terraformpath
                 #för att kunna köra terrafrom kommandon
+                Write-Host "`nSelect website template:" -ForegroundColor Cyan
+                Write-host "1. Standard website"
+                Write-host "2. Submarine website"
+
+                $userchoice = Read-Host "Select template 1 or 2"
+
+                switch ($userchoice) {
+                    "1" {
+                        $WebsiteFilename = "index.html"
+                    }
+                    "2" {
+                        $WebsiteFilename = "submarine.html"
+                    }  
+                    Default {
+                        Write-host "Invalid selection" -ForegroundColor Red
+                        Break
+                    }
+                }
+                
+                
+                
                 Push-Location $Terraformpath
                 try {
                     #terraform initiering, läser konfig, hämtar providers
@@ -61,7 +81,7 @@ while ($running) {
                     #testar om terraform lyckas, kod notequal to 0 kasta felmeddelande (0 är bra det fungerar)
                     if ($LASTEXITCODE -ne 0) {throw "terraform init failed, Exit code $LASTEXITCODE"}
                     #skapar det som är angivet i terraform main.tf
-                    terraform apply -auto-approve
+                    terraform apply -auto-approve -var "website_filename=$WebsiteFilename"
                     #testar om terraform lyckas, kod notequal to 0 kasta felmeddelande (0 är bra det fungerar)
                     if ($LASTEXITCODE -ne 0) {throw "terraform apply failed, Exit code $LASTEXITCODE"}
                 }
@@ -73,10 +93,10 @@ while ($running) {
             }
                 #terraform destroy, tar bort det som skapats och stopar tjänsten W3SVC
             "3" {
-                Write-Host "Destroying site - terraform destroy" -ForegroundColor Cyan
+                Write-Host "Destroying site" -ForegroundColor Cyan
                 Push-Location $Terraformpath
                 try {
-                    terraform destroy -auto-approve
+                    terraform destroy -auto-approve -var "website_filename=index.html"
                     if ($LASTEXITCODE -ne 0) {throw "terraform destroy failed, Exit code $LASTEXITCODE"}
                 }
                 finally {

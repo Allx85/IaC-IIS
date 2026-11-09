@@ -23,6 +23,7 @@ function Test-IIS {
     }
 
     # Kontrollera att webbplatsen svarar
+try {
     $response = Invoke-WebRequest `
         -Uri $WebsiteUrl `
         -UseBasicParsing `
@@ -41,5 +42,10 @@ function Test-IIS {
         throw "Website is not available."
 
     }
-
+}
+catch {
+    Write-Host "Website is not available!" -ForegroundColor Red
+    #hämtar och skriver ut faktiska felmeddelandet
+    Write-Host "No HTTP response received" -ForegroundColor Yellow
+}
 }

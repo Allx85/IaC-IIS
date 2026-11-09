@@ -9,14 +9,20 @@ terraform {
 
 provider "local" {}
 
-# skapar webbplats från HMTL-mall, flyttar till "C:\inetpub\wwwroot"
+# Hantera en resurs från providern hasicorp/local döpt till website.
 resource "local_file" "website" {
-  filename = abspath("C:/inetpub/wwwroot/${var.website_filename}")
-  content  = file("${path.module}/../templates/${var.website_filename}")
+  #filens absolutasökväg, IIS standardkatalog för webbplatsens filer
+  #oavsett mall heter filen index.html
+  filename = "C:/inetpub/wwwroot/index.html"
+  #vilket innehåll filen får,file() läser innehåll från fil
+  #path.module hittar katalog terraform, oavsett vart den är
+  #hämtar värdet från variabeln website_filename för godkända i listan
+  content = file("${path.module}/../templates/${var.website_filename}")
 }
 # skapar loggfil som bekräftar att projektstrukturen har skapats
 resource "local_file" "setup" {
   filename = abspath("${path.module}/../logs/${var.log_filename}")
+  
   content  = "Terraform har skapat projektstrukturen."
 
 }
