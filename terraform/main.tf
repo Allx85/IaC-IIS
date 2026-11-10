@@ -27,7 +27,6 @@ resource "null_resource" "start-service" {
     command = "start-service -name W3SVC"
   
   }
-  depends_on = [ local_file.setup ]
 }
 
 resource "null_resource" "stop-service" {
