@@ -1,7 +1,13 @@
+# startar terraform blocket
 terraform {
+  # vilken provider som ska användas, provider är tillägg(plugin)
   required_providers {
+    # Hanterar filer och mappar på lokal dator
     local = {
+      # Identifierar  för att hitta rätt provider i Terraform Registry
+      # 
       source  = "hashicorp/local"
+      # vilken version som används
       version = "2.4.0"
     }
   }
@@ -27,7 +33,6 @@ resource "null_resource" "start-service" {
     command = "start-service -name W3SVC"
   
   }
-  depends_on = [ local_file.setup ]
 }
 
 resource "null_resource" "stop-service" {

@@ -23,9 +23,9 @@ The project is intended for a Windows environment with PowerShell, Terraform, an
 
 ## Reflection
 
-An important part of the work is coordinating PowerShell and Terraform so that files and the IIS service are handled in the right order. Terraform makes file management repeatable, while PowerShell gives the user a simple way to choose an action and check the result.
+One of the most challenging parts of this project was learning how IIS installation differs between Windows client and Windows Server. On a Windows client, IIS features can be enabled with DISM, while Windows Server uses the `Install-WindowsFeature` PowerShell cmdlet. Understanding which command applies to each environment took some extra research and troubleshooting.
 
-The project is still under development. Before use, the script paths and functions should be checked for consistency; for example, the main script refers to `Set-IISwebsite.ps1`, which is not present among the project files.
+This helped me better understand that infrastructure automation depends on the operating system and the tools it provides. I also learned how PowerShell and Terraform can work together to install and check IIS and deploy a website.
 
 ## GitHub Link
 
