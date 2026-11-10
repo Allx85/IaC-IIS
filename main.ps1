@@ -1,6 +1,7 @@
 # ==================================
 # IIS installation and configuration
 # ==================================
+# https://learn.microsoft.com/en-us/powershell/
 
 # Ladda in funktionerna för orkestrering
 #$PSScriptRoot = mappen där skriptet ligger, mitt är C:\IT-infrastruktur25\iac kursen\projekt-IIS\IaC-IIS
@@ -12,7 +13,6 @@
 
 # Variabler till skriptet
 $Url = "http://localhost"
-$Logfile ="C:\IT-infrastruktur25\iac kursen\projekt-IIS\IaC-IIS\logs"
 $Terraformpath = "$PSScriptRoot\terraform"
 
 
@@ -58,7 +58,7 @@ while ($running) {
                 Write-host "2. Submarine website"
 
                 $userchoice = Read-Host "Select template 1 or 2"
-
+                #Switch för templates meny
                 switch ($userchoice) {
                     "1" {
                         $WebsiteFilename = "index.html"
@@ -109,13 +109,8 @@ while ($running) {
                 write-host "Testing service and site" -ForegroundColor Cyan
                 test-IIS -websiteURL $Url
             }
+           
             "5" {
-                #Get-content läser filen i variabeln $Logfile, fångar fel om filen inte finns
-                #Omvandlar icke terminating error till terminating error
-                Write-Host "Show log" -ForegroundColor Cyan
-                Get-content -Path $Logfile -ErrorAction Stop
-            }
-            "6" {
                 #stänger skriptet genom att ändra running till false
                 Write-Host "Exiting script" -ForegroundColor Cyan
                 $running = $false

@@ -8,8 +8,7 @@ function menu {
     Write-Host "2. Deploy site" -ForegroundColor Cyan
     Write-host "3. Destroy site" -ForegroundColor Cyan
     Write-host "4. Test site" -ForegroundColor Cyan
-    Write-host "5. Show log" -ForegroundColor Cyan
-    Write-Host "6. Exit" -ForegroundColor Cyan
+    Write-host "5. Exit" -ForegroundColor Cyan
     write-host "=======================================" -ForegroundColor DarkMagenta
 }
 menu
