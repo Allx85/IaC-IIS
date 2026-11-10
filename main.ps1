@@ -6,7 +6,6 @@
 # Ladda in funktionerna för orkestrering
 #$PSScriptRoot = mappen där skriptet ligger, mitt är C:\IT-infrastruktur25\iac kursen\projekt-IIS\IaC-IIS
 . "$PSScriptRoot\functions\Install-IIS.ps1"
-. "$PSScriptRoot\functions\Set-IISwebsite.ps1"
 . "$PSScriptRoot\functions\Test-IIS.ps1"
 . "$PSScriptRoot\functions\menu.ps1"
 

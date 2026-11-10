@@ -16,10 +16,3 @@ variable "website_filename" {
     }
 
 }
-
-variable "log_filename" {
-    description = "Name of the log file"
-    type        = string
-    default     = "setup.txt"
-
-}

@@ -20,12 +20,6 @@ resource "local_file" "website" {
   content = file("${path.module}/../templates/${var.website_filename}")
 }
 # skapar loggfil som bekräftar att projektstrukturen har skapats
-resource "local_file" "setup" {
-  filename = abspath("${path.module}/../logs/${var.log_filename}")
-  
-  content  = "Terraform har skapat projektstrukturen."
-
-}
 
 resource "null_resource" "start-service" {
   provisioner "local-exec" {
