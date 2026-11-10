@@ -29,11 +29,11 @@ while ($running) {
     #anropa funktionen menu
     menu
     # sparar användarens val i variabeln choice
-    $choice = Read-Host "Select an option (1-6)"
+    $choice = Read-Host "Select an option (1-5)"
 
-    # Validering, godkänner bara 1 till 6 med operator -notin som kontrollerar om värdet INTE finns i listan.
-    if ($choice -notin "1","2","3","4","5","6") {
-        Write-Host "Invalid choice. Select a number between 1-6" -ForegroundColor Red
+    # Validering, godkänner bara 1 till 5 med operator -notin som kontrollerar om värdet INTE finns i listan.
+    if ($choice -notin "1","2","3","4","5") {
+        Write-Host "Invalid choice. Select a number between 1-5" -ForegroundColor Red
         Read-Host "Press enter to try again"
     # hoppar tillbaka till början av loopen
         continue
@@ -77,11 +77,11 @@ while ($running) {
                 try {
                     #terraform initiering, läser konfig, hämtar providers
                     terraform init
-                    #testar om terraform lyckas, kod notequal to 0 kasta felmeddelande (0 är bra det fungerar)
+                    #testar om terraform lyckas, kod notequal to 0 kasta felmeddelande (0 är bra det fungerar) Throw fångas av yttre catch
                     if ($LASTEXITCODE -ne 0) {throw "terraform init failed, Exit code $LASTEXITCODE"}
                     #skapar det som är angivet i terraform main.tf
                     terraform apply -auto-approve -var "website_filename=$WebsiteFilename"
-                    #testar om terraform lyckas, kod notequal to 0 kasta felmeddelande (0 är bra det fungerar)
+                    #testar om terraform lyckas, kod notequal to 0 kasta felmeddelande (0 är bra det fungerar) Throw fångas av yttre catch
                     if ($LASTEXITCODE -ne 0) {throw "terraform apply failed, Exit code $LASTEXITCODE"}
                 }
                 #Körs oavsett om terraform misslyckas, utan finally blir man kvar i terrafrom om den misslyckas.
