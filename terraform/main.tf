@@ -25,11 +25,17 @@ resource "local_file" "website" {
   #hämtar värdet från variabeln website_filename för godkända i listan
   content = file("${path.module}/../templates/${var.website_filename}")
 }
-# skapar loggfil som bekräftar att projektstrukturen har skapats
 
+# Deklarerar en resurs terraform ska hantera
+# null_resource = låter mig koppla körning av kommandon till terraform utan skapa infrastruktur
+# start-service är namnet som är valt
 resource "null_resource" "start-service" {
+  # Gör det möjligt att köra externa kommandon eller skript lokalt på datorn där terraform körs
   provisioner "local-exec" {
+  # anger vilket program som ska tolka kommandot
+  # -command talar om för powershell att nästa argument är ett kommando
     interpreter = [ "Powershell", "-Command" ]
+    #anger vilket powershell kommando som ska köras
     command = "start-service -name W3SVC"
   
   }
@@ -37,6 +43,7 @@ resource "null_resource" "start-service" {
 
 resource "null_resource" "stop-service" {
   provisioner "local-exec" {
+    # villkor att den körs när terraform destroy körs
     when = destroy
     interpreter = [ "Powershell", "-Command" ]
     command = "stop-service -name W3SVC"

@@ -8,7 +8,7 @@ variable "website_filename" {
     validation {
       condition = contains(
         ["index.html", "submarine.html"],
-        #hämtar värdet från variabeln website_filename
+        #hämtar värdet från variabeln website_filename (variabelreferens)
         var.website_filename
       )
       #vid fel visa detta meddelande

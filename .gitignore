@@ -1,7 +1,3 @@
-#ignorerar lagrade miljövariabler, API keys, username, passwords
-.env
-.env*
-
 # ignorerar mappar som heter .terraform.
 **/.terraform/
 # tfstate ignoreras, terraform.tfstate.backup täcks av *.tfstate.*
