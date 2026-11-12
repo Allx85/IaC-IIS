@@ -34,24 +34,22 @@ try {
         -Uri $WebsiteUrl `
         -UseBasicParsing `
         -ErrorAction Stop
-
-    if ($response.StatusCode -eq 200) {
-
+    
+    
+    # webserver har behandlat HTTP-frågan utana problem
         Write-Host "Website is available!" -ForegroundColor Green
-
+    # 200 = HTTP-fråga okej
         Write-Host "HTTP status code: $($response.StatusCode)" -ForegroundColor Green
 
-    }
 
-    else {
-        # kastar fal och avbryter
-        throw "Website is not available."
-
-    }
 }
 catch {
     Write-Host "Website is not available!" -ForegroundColor Red
     #hämtar och skriver ut faktiska felmeddelandet
-    Write-Host "No HTTP response received" -ForegroundColor Yellow
+    #$_ = automatisk variabel, är det objekt powershell jobbar med nu
+    #i det här fallet innehåller $_ felet
+    #exception hämtar felet
+    #.message = hämtar felmeddelandet som beskrivs
+    Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Yellow
 }
 }

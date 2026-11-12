@@ -12,7 +12,7 @@ terraform {
     }
   }
 }
-
+# hantera lokala filer, null för att utföra utan en riktig resurs
 provider "local" {}
 
 # Hantera en resurs från providern hasicorp/local döpt till website.

@@ -11,6 +11,7 @@ function Install-IIS {
 
         Write-Host "Enabling $feature..." -ForegroundColor Yellow
         #DISM (deployment image servicing and management) för Win 11. Aktiverar Windows-funktioner
+        #/online = aktiva windows systemet, /enable-feature = aktivera features
         #aktiverar funktion ur $feature, /All tar med dependencies, /norestart startar inte om datorn automatiskt
         dism.exe /Online /Enable-Feature "/FeatureName:$feature" /All /NoRestart
         #hämtar exit code från senast körda program
@@ -36,7 +37,7 @@ function Install-IIS {
         }
 
     }
-    #allt gått bra så printas det här
+    #har allt gått bra så printas det här
     Write-Host "`nIIS features are enabled!" -ForegroundColor Green
 
 }
